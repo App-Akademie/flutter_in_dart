@@ -24,7 +24,16 @@ class Column extends Widget {
 
   @override
   String build() {
-    return children.map((child) => child.build()).join("\n");
+    String result = '';
+
+    // Jedes Widget rendern und zur Ausgabe hinzufügen, mit Newline getrennt.
+    for (var child in children) {
+      result += child.build() + "\n";
+    }
+    // Entfernt das letzte unnötige Leerzeichen.
+    result = result.trim();
+
+    return result;
   }
 }
 
@@ -37,10 +46,13 @@ class Padding extends Widget {
 
   @override
   String build() {
+    String result = "";
+
     // Fügt links und rechts Leerzeichen als "Padding" hinzu.
     final paddingString = ' ' * padding;
+    result = paddingString + child.build() + paddingString;
 
-    return paddingString + child.build() + paddingString;
+    return result;
   }
 }
 
@@ -52,12 +64,15 @@ class Center extends Widget {
 
   @override
   String build() {
+    String result = "";
+
     final String content = child.build();
     // Simuliert das Zentrieren, indem Leerzeichen links hinzugefügt werden (vereinfachte Darstellung).
     const int screenWidth = 40; // Angenommene Konsolenbreite.
     final int leftPadding = (screenWidth - content.length) ~/ 2;
+    result = ' ' * leftPadding + content;
 
-    return ' ' * leftPadding + content;
+    return result;
   }
 }
 
