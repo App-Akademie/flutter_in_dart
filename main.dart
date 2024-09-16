@@ -1,39 +1,51 @@
+// Simuliert eine Konsolen-App, ähnlich wie Flutter.
+void main() {
+  runApp(
+    Column(children: [
+      Text('--- Einfacher Text ---'),
+      Padding(
+        child: Text('Text mit Padding!'),
+        padding: 4,
+      ),
+      Center(child: Text('Zentrierter Text!')),
+      Column(children: [
+        Text('Weitere Zeilen in einer Column:'),
+        Row(children: [Text('Zeile 1a'), Text('Zeile 1b')]),
+        Text('Zeile 2'),
+        Text('Zeile 3'),
+      ]),
+    ]),
+  );
+}
+
+// Die runApp-Funktion, die das Root-Widget rendert.
+void runApp(Widget app) {
+  print(app.build());
+}
+
 // Die Basisklasse "Widget", die alle Widgets erben.
 abstract class Widget {
   // In Flutter würde build ein Widget zurückgeben, hier geben wir eine Zeichenkette zurück.
   String build();
 }
 
-// Ein einfaches Text-Widget, das einen Textinhalt darstellt.
-class Text extends Widget {
-  final String content;
-
-  Text(this.content);
-
+// Einfachste Implementierung eines Widget.
+class HiSayer extends Widget {
   @override
   String build() {
-    return content;
+    return "Hi";
   }
 }
 
-// Eine Column, die mehrere Widgets untereinander anzeigt.
-class Column extends Widget {
-  final List<Widget> children;
+// Ein einfaches Text-Widget, das einen Textinhalt darstellt.
+class Text extends Widget {
+  final String data;
 
-  Column(this.children);
+  Text(this.data);
 
   @override
   String build() {
-    String result = '';
-
-    // Jedes Widget rendern und zur Ausgabe hinzufügen, mit Newline getrennt.
-    for (var child in children) {
-      result += child.build() + "\n";
-    }
-    // Entfernt das letzte unnötige Leerzeichen.
-    result = result.trim();
-
-    return result;
+    return data;
   }
 }
 
@@ -56,47 +68,55 @@ class Padding extends Widget {
   }
 }
 
-// Ein Center-Widget, das den Inhalt in die Mitte stellt.
+// Simuliert das Zentrieren von Text mithilfe einer Menge Leerzeichen.
 class Center extends Widget {
   final Widget child;
 
-  Center(this.child);
+  Center({required this.child});
+
+  @override
+  String build() {
+    return "                                   " + child.build();
+  }
+}
+
+// Klasse, die mehrere Objekte bekommt und sie UNTEREINANDER ausgibt
+// Banana( Text("Hi"), Text("Hallo"));
+// ->
+// Hi
+// Hallo
+class Column extends Widget {
+  // Widgets, die untereinander angezeigt werden sollen.
+  final List<Widget> children;
+
+  Column({required this.children});
 
   @override
   String build() {
     String result = "";
 
-    final String content = child.build();
-    // Simuliert das Zentrieren, indem Leerzeichen links hinzugefügt werden (vereinfachte Darstellung).
-    const int screenWidth = 40; // Angenommene Konsolenbreite.
-    final int leftPadding = (screenWidth - content.length) ~/ 2;
-    result = ' ' * leftPadding + content;
+    for (final Widget widget in children) {
+      result = result + widget.build() + "\n";
+    }
 
     return result;
   }
 }
 
-// Die runApp-Funktion, die das Root-Widget rendert.
-void runApp(Widget root) {
-  print(root.build());
-}
+// Klasse, die mehrere Widgets bekommt und sie NEBENEINANDER darstellt.
+class Row extends Widget {
+  final List<Widget> children;
 
-// Simuliert eine Konsolen-App, ähnlich wie Flutter.
-void main() {
-  runApp(
-    Column([
-      Text('--- Einfacher Text ---'),
-      Padding(
-        child: Text('Text mit Padding!'),
-        padding: 4,
-      ),
-      Center(Text('Zentrierter Text!')),
-      Column([
-        Text('Weitere Zeilen in einer Column:'),
-        Text('Zeile 1'),
-        Text('Zeile 2'),
-        Text('Zeile 3'),
-      ]),
-    ]),
-  );
+  Row({required this.children});
+
+  @override
+  String build() {
+    String result = "";
+
+    for (final Widget widget in children) {
+      result += widget.build() + "|";
+    }
+
+    return result;
+  }
 }
